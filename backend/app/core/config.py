@@ -9,7 +9,7 @@ BACKEND_DIR = BASE_DIR / "backend"
 FRONTEND_DIR = BASE_DIR / "frontend"
 FRONTEND_INDEX = FRONTEND_DIR / "index.html"
 PRODUCT_PDF_PATH = BACKEND_DIR / "app" / "data" / "customer_support.pdf"
-VECTORSTORE_PATH = BASE_DIR / "vectorestore"
+VECTORSTORE_PATH = BACKEND_DIR / "vectorestore"
 
 class Settings(BaseSettings):
 

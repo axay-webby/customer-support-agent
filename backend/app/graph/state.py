@@ -7,6 +7,8 @@ class GraphState(TypedDict):
     question: str
     thread_id: str
 
+    route: str
+
     # written by `retrieve`
     retrieved_docs: Annotated[list[str], add]
 

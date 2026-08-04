@@ -1,0 +1,71 @@
+# ── Environment & Secrets ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+__pycache__
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+__init__.py
+
+# ── Virtual Environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── uv ───────────────────────────────────────────────────────────────────────
+.uv/
+uv.lock
+.python-version
+pyproject.toml
+
+# ── FAISS Index (generated at runtime) ───────────────────────────────────────
+faiss_index/
+vectorestore
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Testing & Coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ── Linting & Type Checking ───────────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs & Temp ───────────────────────────────────────────────────────────────
+*.log
+*.tmp
+tmp/
+temp/
+
+# ── Uploads / User Data ───────────────────────────────────────────────────────
+uploads/
+data
+
+requirements.txt
+README.md

@@ -3,7 +3,13 @@ from langchain_experimental.graph_transformers import LLMGraphTransformer
 
 from backend.app.core.config import get_setting
 from backend.app.service.llms import get_llm
-from backend.app.service.vector_store import load_document, split_documents, should_refresh_pdf_assets
+from backend.app.core.schema import ALLOWED_NODES, ALLOWED_RELATIONSHIPS
+from backend.app.service.vector_store import (
+    load_document, 
+    split_documents, 
+    should_refresh_pdf_assets,
+)     
+
 
 settings = get_setting()
 
@@ -20,7 +26,9 @@ def get_graph_db():
 
 def _graph_has_data(graph_db: Neo4jGraph) -> bool:
 
-    result = graph_db.query("MATCH (n) RETURN count(n) AS count")
+    result = graph_db.query(
+        "MATCH (n) RETURN count(n) AS count"
+    )
     return bool(result) and result[0]["count"] > 0
 
 
@@ -36,10 +44,21 @@ def ingest_pdf_to_graph(pdf_path: str, graph_db: Neo4jGraph | None = None, force
         return
 
     documents = load_document(pdf_path)
+
     chunks = split_documents(documents)
 
     llm = get_llm()
-    transformer = LLMGraphTransformer(llm=llm)
+
+    transformer = LLMGraphTransformer(
+        llm=llm,
+
+        # only allow these node labels
+        allowed_nodes=ALLOWED_NODES,
+
+        # only allow these relationship
+        allowed_relationships=ALLOWED_RELATIONSHIPS,
+    )
+
     graph_documents = transformer.convert_to_graph_documents(chunks)
 
     graph_db.add_graph_documents(

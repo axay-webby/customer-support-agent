@@ -1,5 +1,5 @@
 from typing import Annotated, List
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 
 
 """ response validation """

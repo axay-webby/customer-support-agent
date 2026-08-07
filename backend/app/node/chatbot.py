@@ -22,25 +22,6 @@ ingest_pdf_to_graph(PRODUCT_PDF_PATH, force_refresh=force_refresh)
 cypher_chain = create_cypher_chain()
 
 
-async def route_query(state: GraphState):
-    llm = get_llm(streaming=False)
-    messages = [
-        SystemMessage(content=(
-            "You are a routing assistant for a customer-support chatbot. "
-            "Return only 'retrieve' for normal support questions about policies, troubleshooting, or product info. "
-            "Return only 'kg_query' for questions about relationships, connections, dependencies, linked entities, or customer journeys."
-        )),
-        HumanMessage(content=state["question"]),
-    ]
-
-    result = await llm.ainvoke(messages)
-    route = str(getattr(result, "content", "retrieve")).strip().lower()
-    if route not in {"retrieve", "kg_query"}:
-        route = "retrieve"
-
-    return {"route": route}
-
-
 # node 1: retrieve relevant chunks from the PDF
 def make_retrieve_node(retriever: BaseRetriever | None):
 
@@ -110,7 +91,17 @@ async def memory_update(state: GraphState):
 # node 3: generate the final answer
 async def generate(state: GraphState):
 
-    context = "\n".join(state.get("retrieved_docs", []))
+    combined_context = state.get("combined_context", [])
+    fallback_context = state.get("retrieved_docs", [])
+    graph_context = state.get("graph_context", [])
+
+    if combined_context:
+        context = "\n".join(combined_context)
+    elif fallback_context or graph_context:
+        context = "\n".join([*fallback_context, *graph_context])
+    else:
+        context = ""
+
     memory = "\n".join(state.get("memory", []))
 
     llm = get_llm()
@@ -128,4 +119,4 @@ async def generate(state: GraphState):
     ]
  
     result = await llm.ainvoke(messages)
-    return {"response": result.content}
+    return {"answer": result.content}
